@@ -54,20 +54,12 @@ public class Patient {
         this.email = email;
     }
 
-    public LocalDate getDateOfBirth() {
+    public @NotNull LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
-    }
-
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(LocalDate registrationDate) {
-        this.registrationDate = registrationDate;
     }
 
     @NotNull
@@ -76,6 +68,14 @@ public class Patient {
     @NotNull
     private LocalDate dateOfBirth;
 
+    public LocalDate getRegisteredDate() {
+        return registeredDate;
+    }
+
+    public void setRegisteredDate(LocalDate registeredDate) {
+        this.registeredDate = registeredDate;
+    }
+
     @NotNull
-    private LocalDate registrationDate;
+    private LocalDate registeredDate;
 }
