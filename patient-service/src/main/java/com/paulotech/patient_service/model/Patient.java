@@ -19,7 +19,7 @@ public class Patient {
 
     @NotNull
     @Email
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
     public String getAddress() {
