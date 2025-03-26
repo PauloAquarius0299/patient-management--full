@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  database:
+    container_name: patient-service-db
+    image: 'postgres:latest'
+    restart: always
+    ports:
+      - '5000:5432'
+    environment:
+      - POSTGRES_USER=paulotech
+      - POSTGRES_PASSWORD=senha123
+      - POSTGRES_DB=db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  patient-service:
+    container_name: patient-service-app
+    image: patient-service
+    build: .
+    restart: always
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "4000:4000"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://patient-service-db:5432/db
+      - SPRING_DATASOURCE_USERNAME=paulotech
+      - SPRING_DATASOURCE_PASSWORD=senha123
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "patient-service-db", "-p", "5432", "-U", "paulotech"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  pgdata:
