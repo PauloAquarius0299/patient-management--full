@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  billing-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: billing-service
+    ports:
+      - "4001:4001"  # Porta HTTP da aplicação
+      - "9001:9001"  # Outra porta exposta (ajuste conforme sua necessidade)
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod  # Perfil Spring ativo
+      - SERVER_PORT=4001             # Porta do servidor (pode ser substituída via variável)
+      - JAVA_OPTS=-Xmx512m           # Configuração de memória JVM
+    networks:
+      - billing-network
+    restart: unless-stopped          # Política de reinício
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4001/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Banco de dados PostgreSQL (opcional - remova se não for usar)
+  postgres:
+    image: postgres:15
+    container_name: billing-db
+    environment:
+      POSTGRES_USER: billing
+      POSTGRES_PASSWORD: billing123
+      POSTGRES_DB: billing
+    ports:
+      - "5432:5432"
+    volumes:
+      - billing-data:/var/lib/postgresql/data
+    networks:
+      - billing-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U billing -d billing"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+# Definições de volumes e rede
+volumes:
+  billing-data:
+
+networks:
+  billing-network:
+    driver: bridge

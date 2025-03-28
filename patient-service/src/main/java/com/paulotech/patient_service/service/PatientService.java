@@ -4,6 +4,7 @@ import com.paulotech.patient_service.dto.PatientRequestDTO;
 import com.paulotech.patient_service.dto.PatientResponseDTO;
 import com.paulotech.patient_service.exception.EmailAlreadyExistsException;
 import com.paulotech.patient_service.exception.PatientNotFoundException;
+import com.paulotech.patient_service.grpc.BillingServiceGrpcClient;
 import com.paulotech.patient_service.mapper.PatientMapper;
 import com.paulotech.patient_service.model.Patient;
 import com.paulotech.patient_service.repository.PatientRepository;
@@ -17,9 +18,11 @@ import java.util.UUID;
 public class PatientService {
 
     private PatientRepository patientRepository;
+    private final BillingServiceGrpcClient billingServiceGrpcClient;
 
-    public PatientService(PatientRepository patientRepository) {
+    public PatientService(PatientRepository patientRepository, BillingServiceGrpcClient billingServiceGrpcClient) {
         this.patientRepository = patientRepository;
+        this.billingServiceGrpcClient = billingServiceGrpcClient;
     }
 
     public List<PatientResponseDTO> getPatiens(){
